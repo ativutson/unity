@@ -81,7 +81,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     void FixedUpdate()
     {
-        bool isGrounded = IsGrounded; //|| CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
+        bool isGrounded = IsGrounded || CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
 
         anim.speed = animationSpeed;
         anim.SetFloat("velx", _inputTurn);
@@ -124,7 +124,7 @@ public class PlayerAnimationController : MonoBehaviour
         Vector3 newRootPosition;
         Quaternion newRootRotation;
 
-        bool isGrounded = IsGrounded; //|| CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
+        bool isGrounded = IsGrounded || CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
 
         if (isGrounded)
         {

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(InputCharacterScript))]
 public class PlayerAnimationController : MonoBehaviour
@@ -40,6 +44,12 @@ public class PlayerAnimationController : MonoBehaviour
     void Start()
     {
         lossTextObject.SetActive(false);
+
+        leftFoot = this.transform.Find("mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot");
+        rightFoot = this.transform.Find("mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot");
+
+        if (leftFoot == null || rightFoot == null)
+            Debug.Log("One of the feet could not be found");
     }
 
     void Awake()
@@ -71,7 +81,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     void FixedUpdate()
     {
-        bool isGrounded = IsGrounded;
+        bool isGrounded = IsGrounded; //|| CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
 
         anim.speed = animationSpeed;
         anim.SetFloat("velx", _inputTurn);
@@ -114,7 +124,7 @@ public class PlayerAnimationController : MonoBehaviour
         Vector3 newRootPosition;
         Quaternion newRootRotation;
 
-        bool isGrounded = IsGrounded;
+        bool isGrounded = IsGrounded; //|| CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
 
         if (isGrounded)
         {
@@ -130,16 +140,77 @@ public class PlayerAnimationController : MonoBehaviour
         //use rotational root motion as is
         newRootRotation = anim.rootRotation;
 
-        //Here, you could scale the difference in position and rotation to make the character go faster or slower
-
-        // old way
-        //this.transform.position = newRootPosition;
-        //this.transform.rotation = newRootRotation;
         newRootPosition = Vector3.LerpUnclamped(anim.rootPosition, newRootPosition, rootMovementSpeed);
         newRootRotation = Quaternion.LerpUnclamped(anim.rootRotation, newRootRotation, rootTurnSpeed);
         rbody.MovePosition(newRootPosition);
         rbody.MoveRotation(newRootRotation);
     }
 
+    public static bool CheckGroundNear(
+        Vector3 charPos,       
+        float jumpableGroundNormalMaxAngle, 
+        float rayDepth, //how far down from charPos will we look for ground?
+        float rayOriginOffset, //charPos near bottom of collider, so need a fudge factor up away from there
+        out bool isJumpable
+    ) 
+    {
+
+        bool ret = false;
+        bool _isJumpable = false;
+
+
+        float totalRayLen = rayOriginOffset + rayDepth;
+
+        Ray ray = new Ray(charPos + Vector3.up * rayOriginOffset, Vector3.down);
+
+        int layerMask = 1 << LayerMask.NameToLayer("Default");
+
+
+        RaycastHit[] hits = Physics.RaycastAll(ray, totalRayLen, layerMask);
+
+        RaycastHit groundHit = new RaycastHit();
+
+        foreach(RaycastHit hit in hits)
+        {
+
+            if (hit.collider.gameObject.CompareTag("ground"))
+            {           
+
+                ret = true;
+
+                groundHit = hit;
+
+                _isJumpable = Vector3.Angle(Vector3.up, hit.normal) < jumpableGroundNormalMaxAngle;
+
+                break; //only need to find the ground once
+
+            }
+
+        }
+
+        DrawRay(ray, totalRayLen, hits.Length > 0, groundHit, Color.magenta, Color.green);
+
+        isJumpable = _isJumpable;
+
+        return ret;
+    }
+
+    public static void DrawRay(Ray ray, float rayLength, bool hitFound, RaycastHit hit, Color rayColor, Color hitColor) {
+            
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayLength, rayColor); 
+                       
+            if (hitFound)
+            {
+                //draw an X that denotes where ray hit
+                const float ZBufFix = 0.01f;
+                const float edgeSize = 0.2f;
+                Color col = hitColor;
+
+                Debug.DrawRay(hit.point + Vector3.up * ZBufFix, Vector3.forward * edgeSize, col);
+                Debug.DrawRay(hit.point + Vector3.up * ZBufFix, Vector3.left * edgeSize, col);
+                Debug.DrawRay(hit.point + Vector3.up * ZBufFix, Vector3.right * edgeSize, col);
+                Debug.DrawRay(hit.point + Vector3.up * ZBufFix, Vector3.back * edgeSize, col);
+            }
+        }
 
 }

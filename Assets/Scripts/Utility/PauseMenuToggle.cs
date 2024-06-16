@@ -3,33 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CanvasGroup))]
-
 public class PauseMenuToggle : MonoBehaviour
 {
-    private CanvasGroup canvasGroup;
+    private CanvasGroup canvasGroup; // holds canvas group component
 
-    void Awake()
-    {
+    void Awake() {
         canvasGroup = GetComponent<CanvasGroup>();
+
     }
-
-
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp (KeyCode.Escape)) {
-            if (canvasGroup.interactable) {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (canvasGroup.interactable)
+            {
+
                 canvasGroup.interactable = false;
                 canvasGroup.blocksRaycasts = false;
                 canvasGroup.alpha = 0f;
                 Time.timeScale = 1f;
-            } else {
+            }
+            else
+            {
                 canvasGroup.interactable = true;
                 canvasGroup.blocksRaycasts = true;
                 canvasGroup.alpha = 1f;

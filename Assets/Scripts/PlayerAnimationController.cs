@@ -39,11 +39,11 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-    public GameObject lossTextObject;
+    //public GameObject lossTextObject;
     
     void Start()
     {
-        lossTextObject.SetActive(false);
+        //lossTextObject.SetActive(false);
 
         leftFoot = this.transform.Find("mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot");
         rightFoot = this.transform.Find("mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot");
@@ -89,7 +89,7 @@ public class PlayerAnimationController : MonoBehaviour
         anim.SetBool("isFalling", !isGrounded);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
 
         if (collision.transform.gameObject.tag == "ground")
@@ -101,14 +101,14 @@ public class PlayerAnimationController : MonoBehaviour
             //EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(collision.contacts[0].point, collision.impulse.magnitude);
 
         }
-        else if (collision.transform.gameObject.tag == "Monster")
+        /*else if (collision.transform.gameObject.tag == "Monster")
         {
             lossTextObject.SetActive(true);
-        }
+        }*/
 						
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider collision)
     {
 
         if (collision.transform.gameObject.tag == "ground")

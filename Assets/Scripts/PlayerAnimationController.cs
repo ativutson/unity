@@ -87,6 +87,15 @@ public class PlayerAnimationController : MonoBehaviour
         anim.SetFloat("velx", _inputTurn);
         anim.SetFloat("vely", _inputForward);
         anim.SetBool("isFalling", !isGrounded);
+
+        //this still does NOT help player have correct y pos
+        //Vector3 pos = rbody.position;
+        //pos.y = Terrain.activeTerrain.SampleHeight(rbody.position);
+        //rbody.position = pos;
+
+        //tried using RigidBody to move position, didn't help
+        //Vector3 m_input = new Vector3(_inputTurn, 0, _inputForward);
+        //rbody.MovePosition(rbody.position + m_input * rootMovementSpeed * Time.fixedDeltaTime);
     }
 
     void OnTriggerEnter(Collider collision)

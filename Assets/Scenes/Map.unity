@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0039219693, g: 0.007522835, b: 0.011379446, a: 1}
+  m_IndirectSpecularColor: {r: 0.003954564, g: 0.0075204996, b: 0.01137494, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7970,20 +7970,6 @@ MonoBehaviour:
   InputMapToCircular: 1
   forwardInputFilter: 5
   turnInputFilter: 5
---- !u!136 &307872675
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 307872672}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.7053707
-  m_Height: 4.3796177
-  m_Direction: 1
-  m_Center: {x: -0.027502824, y: 2.1244476, z: 0.059741974}
 --- !u!54 &307872676
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8013,6 +7999,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasHealthCollectable: 0
+--- !u!136 &307872682
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307872672}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 4.27
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1001 &308006912
 PrefabInstance:
   m_ObjectHideFlags: 0

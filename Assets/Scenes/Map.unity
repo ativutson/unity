@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.003954564, g: 0.0075204996, b: 0.01137494, a: 1}
+  m_IndirectSpecularColor: {r: 0.0039219693, g: 0.007522835, b: 0.011379446, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7873,7 +7873,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 541f042eaeeaf4f03ad7756d1b4ae9cb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 541f042eaeeaf4f03ad7756d1b4ae9cb,
         type: 3}
@@ -7980,10 +7980,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.7053707
+  m_Height: 4.3796177
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: -0.027502824, y: 2.1244476, z: 0.059741974}
 --- !u!54 &307872676
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7998,7 +7998,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &307872679
 MonoBehaviour:

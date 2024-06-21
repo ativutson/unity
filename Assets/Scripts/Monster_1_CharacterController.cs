@@ -33,15 +33,6 @@ public class Monster_1_CharacterController : MonoBehaviour
     bool m_Started; // overlap box collider detector
 
 
-    public bool IsGrounded
-    {
-        get
-        {
-            return groundContactCount > 0;
-        }
-    }
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -216,26 +207,6 @@ public class Monster_1_CharacterController : MonoBehaviour
         }
     }
 
-    //bool isGrounded()
-    //{
-
-        
-    //    if ()
-    //    {
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
-
-    //private void OnDrawGizmos()
-    //{
-    //    // visualize our boxcast
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawCube(transform.position-transform.up*maxDistance,boxsize);
-    //}
 
     void OnDrawGizmos()
     {
@@ -257,8 +228,6 @@ public class Monster_1_CharacterController : MonoBehaviour
         //Check when there is a new collider coming into contact with the box
         while (i < hitColliders.Length)
         {
-            //Output all of the collider names
-            Debug.Log("Hit : " + hitColliders[i].name + i);
             //Increase the number of Colliders in the array
             i++;
         }
@@ -328,7 +297,7 @@ public class Monster_1_CharacterController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log("Ground check: " + isGrounded());
+        //Debug.Log("Ground check: " + isGrounded());
     }
 
 

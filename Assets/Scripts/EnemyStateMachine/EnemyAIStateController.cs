@@ -26,6 +26,11 @@ public class EnemyAIStateController : MonoBehaviour
     // set current state
     EnemyBaseState currentState;
 
+    // for detection (enemy FoV)
+
+    // determine what layer the enemies look for (player)
+    public LayerMask detectionLayer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +39,10 @@ public class EnemyAIStateController : MonoBehaviour
 
         currentState = enemyPatrol; //  set first state
         currentState.EnterState(this, anim, agent);
+
+        // add a couple layers to our detection for enemy FoV (so it can't see through things)
+        detectionLayer |= (1 << 0);
+        detectionLayer |= (1 << 9);
     }
 
     void Update()

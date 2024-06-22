@@ -30,6 +30,42 @@ public class EnemyAIStateController : MonoBehaviour
 
     // determine what layer the enemies look for (player)
     public LayerMask detectionLayer;
+    public LayerMask playerLayer;
+
+
+    // set the enemy's view radius
+    private float detectionRadius;
+    private float minDetectionAngle;
+    private float maxDetectionAngle;
+
+    public float DetectionRadius
+    {
+        get { return detectionRadius; }
+        private set { detectionRadius = value; }
+    }
+
+    public float MinDetectionAngle
+    {
+        get { return minDetectionAngle; }
+        private set
+        {
+
+            Debug.Assert(value >= -180, "Angle min out of bounds!");
+            minDetectionAngle = value;
+        }
+    }
+
+    public float MaxDetectionAngle
+    {
+        get { return maxDetectionAngle; }
+        private set
+        {
+            Debug.Assert(value <= 180, "Angle max out of bounds!");
+            maxDetectionAngle = value;
+        }
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +78,10 @@ public class EnemyAIStateController : MonoBehaviour
 
         // add a couple layers to our detection for enemy FoV (so it can't see through things)
         detectionLayer |= (1 << 0);
-        detectionLayer |= (1 << 9);
+
+        DetectionRadius = 10f; // how far can enemy see
+        MinDetectionAngle = -50;
+        MaxDetectionAngle = 50;
     }
 
     void Update()
@@ -60,4 +99,63 @@ public class EnemyAIStateController : MonoBehaviour
         currentState.EnterState(this, anim, agent);
     }
 
+    // handle FoV detection by enemy
+    // may be called across various states so we're putting it in here
+
+    public bool handleDetection(Animator anim)
+    {
+        // handle the Field of View of the enemy
+        // if player is within their viewing angle, switch states
+
+        // set up collision detection
+        Collider[] colliders = Physics.OverlapSphere(this.transform.position, detectionRadius, detectionLayer);
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Debug.Log(colliders[i].name + " was hit!");
+
+            // if player layer then check if it is in FoV
+            if (colliders[i].gameObject.layer == 10)
+            {
+                Debug.Log("Player found!");
+
+                // do a raycast to see if the player is behind anything
+                // get direction vector toward player
+                Vector3 playerDirection = transform.position - colliders[i].gameObject.transform.position;
+                bool isVisible = Physics.Raycast(transform.position, playerDirection, detectionRadius);
+
+                if (isVisible)
+                {
+
+                    // vector for the gap between enemy and player
+                    Vector3 targetDetection = colliders[0].transform.position - transform.position;
+                    // angle between where enemy is facing and where the target is
+                    float viewAngle = Vector3.Angle(transform.forward, targetDetection);
+                    // is it in FoV?
+                    if (viewAngle >= minDetectionAngle && viewAngle <= maxDetectionAngle)
+                    {
+
+                        Debug.Log("Player is visible!");
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+        return false;
+
+        //else if (currentState == enemyAttack | currentState == enemyStalk)
+        //{
+        //    // switch to patrol state if it can't see player anymore
+        //    //ChangeState(enemyPatrol);
+        //    return false;
+        //}
+        //else
+        //{// continue current state
+        //    Debug.Log("Resuming patrol.");
+        //    return;
+        //}
+
+    }
 }

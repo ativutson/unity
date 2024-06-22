@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5444307712454611055}
   - component: {fileID: 3973341878462586598}
   - component: {fileID: 4561910360282288995}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EnemyWaypointMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}

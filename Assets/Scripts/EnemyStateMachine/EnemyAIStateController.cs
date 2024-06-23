@@ -32,11 +32,13 @@ public class EnemyAIStateController : MonoBehaviour
     public LayerMask detectionLayer;
     public LayerMask playerLayer;
 
-
     // set the enemy's view radius
     private float detectionRadius;
     private float minDetectionAngle;
     private float maxDetectionAngle;
+
+    // death state detection
+    private EnemyHealthScript health; // holds enemy's health script
 
     public float DetectionRadius
     {
@@ -82,10 +84,20 @@ public class EnemyAIStateController : MonoBehaviour
         DetectionRadius = 10f; // how far can enemy see
         MinDetectionAngle = -50;
         MaxDetectionAngle = 50;
+        health = GetComponent<EnemyHealthScript>();
+        if(health == null)
+        {
+            Debug.Log("No Health component!");
+        }
+
     }
 
     void Update()
     {
+        // check for death;
+        //Debug.Log("Check health");
+        isKilled(anim,health);
+
         currentState.UpdateState(this, anim, agent);
     }
 
@@ -112,7 +124,7 @@ public class EnemyAIStateController : MonoBehaviour
 
         for (int i = 0; i < colliders.Length; i++)
         {
-            Debug.Log(colliders[i].name + " was hit!");
+            //Debug.Log(colliders[i].name + " was hit!");
 
             // if player layer then check if it is in FoV
             if (colliders[i].gameObject.layer == 10)
@@ -145,17 +157,26 @@ public class EnemyAIStateController : MonoBehaviour
 
         return false;
 
-        //else if (currentState == enemyAttack | currentState == enemyStalk)
-        //{
-        //    // switch to patrol state if it can't see player anymore
-        //    //ChangeState(enemyPatrol);
-        //    return false;
-        //}
-        //else
-        //{// continue current state
-        //    Debug.Log("Resuming patrol.");
-        //    return;
-        //}
+    }
 
+    public void isBloodied(Animator anim)
+    {
+        // @TODO
+        // if enemy is below x health, toggle injured animation layer
+        
+    }
+
+    public void isKilled(Animator anim, EnemyHealthScript health)
+    {
+        // if enemy is 0, toggle ragdoll
+        // enter death state
+        if (health.CurrentHealth == 0f) {
+
+            agent.speed = 0;
+            agent.isStopped = true;
+            agent.acceleration = 0;
+            agent.enabled = false;
+            ChangeState(enemyDeath);
+        }
     }
 }

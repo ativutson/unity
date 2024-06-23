@@ -28,46 +28,71 @@ public class EnemyStalkState : EnemyBaseState
         Debug.Log("Hello from stalking state!");
 
         // set buffer
-        captureDistance = 10;
-
+        captureDistance = 2;
 
         setNextWaypoint(enemy, agent);
+
+        // ensure attack anim layer weight is 0 to avoid blending.
+        anim.SetLayerWeight(2, 0.5f);
     }
 
     public override void UpdateState(EnemyAIStateController enemy, Animator anim, NavMeshAgent agent)
     {
-        setNextWaypoint(enemy, agent); //  call waypoint iterator
 
-        blocked = NavMesh.Raycast(agent.transform.position, newTargetDestination, out hit, NavMesh.AllAreas);
+        
+        // if player seen, draw closer
 
-        // draw line for raycast
-        Debug.DrawLine(agent.transform.position, newTargetDestination, blocked ? Color.red : Color.green);
+            setNextWaypoint(enemy, agent); //  call waypoint iterator
 
-        if (blocked)
-            Debug.DrawRay(hit.position, Vector3.up, Color.red);
+            blocked = NavMesh.Raycast(agent.transform.position, newTargetDestination, out hit, NavMesh.AllAreas);
 
+            // draw line for raycast
+            Debug.DrawLine(agent.transform.position, newTargetDestination, blocked ? Color.red : Color.green);
 
-        if (targetMarker != null)
-        {
-            Object.Destroy(targetMarker);
-        }
-        // draw the target marker at predicted destination.
-        targetMarker = Object.Instantiate(enemy.targetMarkerPrefab,
-            newTargetDestination, Quaternion.identity);
-
-        // set agent to move using the Mecanim animations
-        anim.SetFloat("VelocityZ", agent.velocity.magnitude / agent.speed);
+            if (blocked)
+                Debug.DrawRay(hit.position, Vector3.up, Color.red);
 
 
-
-        if (agent.remainingDistance <= captureDistance)
-        {
             if (targetMarker != null)
             {
                 Object.Destroy(targetMarker);
             }
-            enemy.ChangeState(enemy.enemyPatrol);
-        }
+            // draw the target marker at predicted destination.
+            targetMarker = Object.Instantiate(enemy.targetMarkerPrefab,
+                newTargetDestination, Quaternion.identity);
+
+            // set agent to move using the Mecanim animations
+            anim.SetFloat("VelocityZ", agent.velocity.magnitude / agent.speed);
+
+
+
+            if (agent.remainingDistance <= captureDistance)
+            {
+                Debug.Log("Target close!");
+
+                if (targetMarker != null)
+                {
+                    Object.Destroy(targetMarker);
+                }
+                // agent stops moving!
+                agent.isStopped = true;
+                agent.speed = 0;
+
+                // when close to Player, switch to attack state!
+                enemy.ChangeState(enemy.enemyAttack);
+            }
+            else if (agent.remainingDistance > enemy.DetectionRadius)
+            {
+                // check if target still in FoV
+                bool isPlayer = enemy.handleDetection(anim);
+                if (!isPlayer)
+                {
+                    // go back to patrolling
+                    enemy.ChangeState(enemy.enemyPatrol);
+                }
+            }
+      
+        
 
     }
 
@@ -89,6 +114,7 @@ public class EnemyStalkState : EnemyBaseState
 
     private void setNextWaypoint(EnemyAIStateController enemy, UnityEngine.AI.NavMeshAgent agent)
     {
+
 
         targetVelocity = enemy.target.GetComponent<VelocityReporter>().velocity;
 

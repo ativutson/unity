@@ -6,12 +6,19 @@ public class EnemyHealthScript : MonoBehaviour
     public float maxHealth;
     [SerializeField] FloatingHeathBar healthBar;
     private float currentHealth;
-    
+
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
+        private set { currentHealth = value; }
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
         healthBar = GetComponentInChildren<FloatingHeathBar>();
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -19,12 +26,12 @@ public class EnemyHealthScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            TakeDamage(20f);
+            TakeDamage(50f);
         }
         
         if (Input.GetKeyDown(KeyCode.U))
         {
-            TakeDamage(-20f);
+            TakeDamage(-50f);
         }
     }
 

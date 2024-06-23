@@ -12,7 +12,7 @@ public class EnemyAttackState : EnemyBaseState
         Debug.Log("Hello from attack state!");
         agent.isStopped = false;
         agent.speed = 2; // reset speed to default
-        timer = 2f;
+        timer = 1f; // added a variable for placeholder delay (to allow attack animt o play out)
 
     }
 

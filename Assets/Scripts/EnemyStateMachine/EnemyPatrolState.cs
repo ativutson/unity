@@ -43,8 +43,6 @@ public class EnemyPatrolState : EnemyBaseState
         // ensure there is no pending path for it to alteady take
         // otherwise it will keep rerouting away from the nearest point
 
-       
-
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
             setNextWaypoint(enemy, anim, agent); //  call waypoint iterator
@@ -53,11 +51,11 @@ public class EnemyPatrolState : EnemyBaseState
             // set agent to move using the Mecanim animations
         anim.SetFloat("VelocityZ", agent.velocity.magnitude / agent.speed);
 
-        // patrol!
-        //Debug.Log("Checking FoV");
+        // verify the player isn't in detection zone
+        // if it is, move to stalking state
+
         bool isPlayer = enemy.handleDetection(anim);
 
-        // if player not seen, iter through waypoints
         if (isPlayer)
         {
             enemy.ChangeState(enemy.enemyStalk);
@@ -67,6 +65,8 @@ public class EnemyPatrolState : EnemyBaseState
 
     private void setNextWaypoint(EnemyAIStateController enemy, Animator anim, UnityEngine.AI.NavMeshAgent agent)
     {
+        // generates next destination for the enemy
+        // iterates through waypoints
 
         Debug.Log("Hello from set waypoint function!");
 

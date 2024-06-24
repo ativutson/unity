@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 7591959249925745244, guid: c834424343db04cc59cadc06728fb332,
         type: 3}
       propertyPath: m_Name
-      value: Enemy Monster
+      value: Enemy Level 1
       objectReference: {fileID: 0}
     - target: {fileID: 8155854862692154702, guid: c834424343db04cc59cadc06728fb332,
         type: 3}
@@ -990,3 +990,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 857c198fb0d414e07ad0af0968253e2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1613277635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8832340532446396242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680e0b0b8b8f64f3aa1025236d7dc1a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 384dab3f1dba442dba338d4db52b6015, type: 3}

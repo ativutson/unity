@@ -29,13 +29,13 @@ public class EnemyStalkState : EnemyBaseState
 
         // set buffer for success threshold
         // note that the agent also has a stopping disance set in its Navmesh settings
-        captureDistance = 2;
+        captureDistance = 1;
 
         // find its first destination
         setNextWaypoint(enemy, agent);
 
         // ensure attack anim layer weight is 0 to avoid blending.
-        anim.SetLayerWeight(2, 0.5f);
+        anim.SetLayerWeight(2, 0f);
     }
 
     public override void UpdateState(EnemyAIStateController enemy, Animator anim, NavMeshAgent agent)

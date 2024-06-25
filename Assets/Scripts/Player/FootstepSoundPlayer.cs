@@ -32,7 +32,7 @@ public class FootstepSoundPlayer : MonoBehaviour
         tempGO.transform.position = pos; // set its position
         AudioSource tempASource = tempGO.AddComponent<AudioSource>(); // add an audio source
         tempASource.clip = audioSource;
-        tempASource.volume = 0.5f;
+        tempASource.volume = 0.15f;  
         tempASource.Play(); // start the sound
         MonoBehaviour.Destroy(tempGO, tempASource.clip.length); // destroy object after clip duration (this will not account for whether it is set to loop)
         return tempASource; // return the AudioSource reference

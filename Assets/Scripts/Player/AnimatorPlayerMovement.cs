@@ -12,9 +12,12 @@ public class AnimatorPlayerMovement : MonoBehaviour
     public float deceleration = 4.0f;
     CharacterController characterController;
     Rigidbody rb;
+
     public float jumpPower;
 
     public bool isGrounded;
+
+    public LayerMask groundLayer; // ground layer
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +25,7 @@ public class AnimatorPlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
+        isGrounded = true;
     }
 
     // Update is called once per frame
@@ -103,6 +107,7 @@ public class AnimatorPlayerMovement : MonoBehaviour
                 isGrounded = false;
             }
             if(!isGrounded){
+
                 isJump = false;
             }
         }
@@ -112,6 +117,7 @@ public class AnimatorPlayerMovement : MonoBehaviour
             }
             else{
                 isGrounded = false;
+                handleGrounding();
             }
             isJump = false;
         }
@@ -122,10 +128,37 @@ public class AnimatorPlayerMovement : MonoBehaviour
 
     public bool IsGrounded() {
         RaycastHit hit;
-        float rayLength = 1.1f; // Adjust based on your character's size
+        float rayLength = 2f; // Adjust based on your character's size
         if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength)) {
+            //Debug.Log("Grounded!");
             return true;
+            
         }
+        //Debug.Log("Not Grounded!");
         return false;
+    }
+
+    void handleGrounding()
+    {
+        // assumes player is NOT grounded
+        // look for ground object
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 10f, groundLayer);
+
+        if (colliders.Length > 0)
+        {
+            Vector3 distanceToGround = colliders[0].gameObject.transform.position - transform.position;
+
+            Debug.Log("Ground found at " + distanceToGround);
+
+            // move character down
+            transform.Translate((Vector3.down * -distanceToGround.y )* Time.deltaTime);
+
+            //transform.position = new Vector3(transform.position.x, transform.position.y - distanceToGround.y, transform.position.z);
+            //for (int i = 0; i < colliders.Length; i++)
+            //{
+            //Debug.Log(colliders[i].name + " was hit!");
+
+        }
     }
 }

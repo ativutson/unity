@@ -7,14 +7,14 @@ public class AnimatorPlayerMovement : MonoBehaviour
     Animator animator;
     float vely = 0.0f;
     float velx = 0.0f;
-    bool isJump = false;
+    public bool isJump = false;
     public float acceleration = 2.0f;
     public float deceleration = 4.0f;
     CharacterController characterController;
     Rigidbody rb;
     public float jumpPower;
 
-    bool isGrounded;
+    public bool isGrounded;
 
     // Start is called before the first frame update
     void Start()
@@ -64,17 +64,10 @@ public class AnimatorPlayerMovement : MonoBehaviour
             velx = 0;
         }
 
-        if(!isGrounded){
-            if(isJump){
-                isJump = false;
-            }
-        }
-        else if(isJump){
-            isGrounded = false;
-        }
-        if(Input.GetKeyDown(KeyCode.Space)){
-            isJump = true;
-        }
+        animator.SetFloat("vely", vely);
+        animator.SetFloat("velx", velx);
+        
+        handleJump();
 
         /*if(jumpPressed){
             if(!characterController.isGrounded){
@@ -92,15 +85,47 @@ public class AnimatorPlayerMovement : MonoBehaviour
             isJump = false;
             rb.velocity += new Vector3(velx, 0.0f, vely);
         }*/
-
-        animator.SetFloat("vely", vely);
-        animator.SetFloat("velx", velx);
-        animator.SetBool("isJump", isJump);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit){
         if(hit.transform.CompareTag("ground") && !isGrounded){
             isGrounded = true;
         }
+    }
+
+    void handleJump(){
+        if(Input.GetKey(KeyCode.Space)){
+            isJump = true;
+            if(IsGrounded()){
+                isGrounded = true;
+            }
+            else{
+                isGrounded = false;
+            }
+            if(!isGrounded){
+                isJump = false;
+            }
+        }
+        else{
+            if(IsGrounded()){
+                isGrounded = true;
+            }
+            else{
+                isGrounded = false;
+            }
+            isJump = false;
+        }
+
+        animator.SetBool("isJump", isJump);
+        animator.SetBool("isGrounded", isGrounded);
+    }
+
+    public bool IsGrounded() {
+        RaycastHit hit;
+        float rayLength = 1.1f; // Adjust based on your character's size
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength)) {
+            return true;
+        }
+        return false;
     }
 }

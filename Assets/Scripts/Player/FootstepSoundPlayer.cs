@@ -13,8 +13,8 @@ public class FootstepSoundPlayer : MonoBehaviour
     }
     private void Update(){
         var footstep = animator.GetFloat("Footstep");
-        Debug.Log(footstep);
-        Debug.Log("last " + _lastFootstep);
+        //Debug.Log(footstep);
+        //Debug.Log("last " + _lastFootstep);
         if(Mathf.Abs(footstep) < .00001f){
             footstep = 0;
         }

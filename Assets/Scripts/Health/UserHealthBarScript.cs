@@ -20,6 +20,12 @@ public class UserHealthBarScript : MonoBehaviour
         {
             TakeDamage(.2f);
         }
+
+        if (other.gameObject.tag == "Health")
+        {
+            Debug.Log("add health");
+            TakeDamage(-20f);
+        }
     }
     
     private void OnTriggerExit(Collider other)

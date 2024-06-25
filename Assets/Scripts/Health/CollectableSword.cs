@@ -8,9 +8,9 @@ public class CollectableSword : MonoBehaviour
     {
         SwordCollector bc = null;
 
-        if (c.attachedRigidbody != null)
+        if (c.gameObject.CompareTag("Player"))
         {
-            bc = c.attachedRigidbody.gameObject.GetComponent<SwordCollector>();
+            bc = c.gameObject.GetComponent<SwordCollector>();
         }
 
         if (bc != null)

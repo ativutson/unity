@@ -54,7 +54,7 @@ public class EnemyPatrolState : EnemyBaseState
         // verify the player isn't in detection zone
         // if it is, move to stalking state
 
-        bool isPlayer = enemy.handleDetection(anim);
+        bool isPlayer = enemy.handleDetection();
 
         if (isPlayer)
         {

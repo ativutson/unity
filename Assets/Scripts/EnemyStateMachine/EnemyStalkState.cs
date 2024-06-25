@@ -89,7 +89,7 @@ public class EnemyStalkState : EnemyBaseState
         else if (agent.remainingDistance > enemy.DetectionRadius)
         {
             // check if target still in FoV
-            bool isPlayer = enemy.handleDetection(anim);
+            bool isPlayer = enemy.handleDetection();
             if (!isPlayer)
             {
                 if (targetMarker != null)

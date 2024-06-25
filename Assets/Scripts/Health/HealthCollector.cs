@@ -8,7 +8,5 @@ public class HealthCollector : MonoBehaviour
 
     public void ReceiveHealth() {
         hasHealthCollectable = true; 
-        //UserHealthBarScript health = GetComponent<UserHealthBarScript>();
-        //health.TakeDamage(-10f);
     }
 }

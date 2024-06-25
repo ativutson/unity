@@ -20,6 +20,12 @@ public class UserHealthBarScript : MonoBehaviour
         {
             TakeDamage(.2f);
         }
+
+        if (other.gameObject.tag == "Health")
+        {
+            Debug.Log("add health");
+            TakeDamage(-20f);
+        }
     }
     
     private void OnTriggerExit(Collider other)
@@ -28,7 +34,7 @@ public class UserHealthBarScript : MonoBehaviour
     }
 
     // Note a heal is negative damage taken
-    public void TakeDamage(float damageTaken)
+    void TakeDamage(float damageTaken)
     {
         currentHealth -= damageTaken;
         currentHealth = Math.Clamp(currentHealth, 0, maxHealth);

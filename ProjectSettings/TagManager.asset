@@ -8,6 +8,7 @@ TagManager:
   - PlayerEyes
   - ground
   - Sword
+  - Health
   layers:
   - Default
   - TransparentFX

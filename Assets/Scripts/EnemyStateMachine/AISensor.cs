@@ -6,16 +6,16 @@ using UnityEngine;
 public class AISensor : MonoBehaviour
 {
     // input for the Mesh creator
-    public float distance = 10;
-    public float angle = 30f;
-    public float height = 1.0f;
-    public Color meshColour = Color.red;
+    public float distance;
+    public float angle;
+    public float height;
+    public Color meshColour;
 
     Mesh mesh;
 
     // scanning behaviour
 
-    public int scanFrequency = 30; // how many times to scan
+    public int scanFrequency = 60; // how many times to scan
     public LayerMask layermasks; // what layers to scan
     public LayerMask excludeLayers; // what layers to leave out 
 
@@ -30,6 +30,11 @@ public class AISensor : MonoBehaviour
 
     private void Start()
     {
+
+        distance = 400f;
+        angle = 50f;
+        height = 50.0f;
+        meshColour = Color.red;
         scanInterval = 1.0f / scanFrequency;
     }
 
@@ -66,19 +71,26 @@ public class AISensor : MonoBehaviour
 
         // first check height of object
 
+
         Vector3 agentPosition = transform.position;
         Vector3 targetPosition = obj.transform.position;
 
         Vector3 direction = targetPosition - agentPosition;
 
-        if (direction.y < 0 || direction.y > height)
+        //Debug.Log(direction.y);
+
+        if (direction.y > height)
+        //direction.y < 0.0f)
+        //|| direction.y > height)
         {
+            //Debug.Log("Less than 0");
             return false;
         }
 
 
 
         // check if it is in the slice of vision cone (angle)
+
         direction.y = 0; // zero this out so we don't have to worry about differences in height
         float angleFromTarget = Vector3.Angle(direction, transform.forward);
 
@@ -101,8 +113,8 @@ public class AISensor : MonoBehaviour
         {
             return false;
         }
-
         //Debug.Log(obj + " is in sight!");
+
         return true;
 
     }

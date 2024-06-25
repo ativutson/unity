@@ -32,12 +32,12 @@ public class EnemyAIStateController : MonoBehaviour
     // determine what layer the enemies look for (player)
     public LayerMask detectionLayer; // may be obselete
     public LayerMask playerLayer; // may be obselete
-    public AISensor sensor; // new method
+    private AISensor sensor; // new method
 
     // set the enemy's view radius
     private float detectionRadius; // may be obselete
-    private float minDetectionAngle; // may be obselete
-    private float maxDetectionAngle; // may be obselete
+    //private float minDetectionAngle; // may be obselete
+    //private float maxDetectionAngle; // may be obselete
 
 
     // death state detection
@@ -49,26 +49,26 @@ public class EnemyAIStateController : MonoBehaviour
         private set { detectionRadius = value; }
     }
 
-    public float MinDetectionAngle
-    {
-        get { return minDetectionAngle; }
-        private set
-        {
+    //public float MinDetectionAngle
+    //{
+    //    get { return minDetectionAngle; }
+    //    private set
+    //    {
 
-            Debug.Assert(value >= -180, "Angle min out of bounds!");
-            minDetectionAngle = value;
-        }
-    }
+    //        Debug.Assert(value >= -180, "Angle min out of bounds!");
+    //        minDetectionAngle = value;
+    //    }
+    //}
 
-    public float MaxDetectionAngle
-    {
-        get { return maxDetectionAngle; }
-        private set
-        {
-            Debug.Assert(value <= 180, "Angle max out of bounds!");
-            maxDetectionAngle = value;
-        }
-    }
+    //public float MaxDetectionAngle
+    //{
+    //    get { return maxDetectionAngle; }
+    //    private set
+    //    {
+    //        Debug.Assert(value <= 180, "Angle max out of bounds!");
+    //        maxDetectionAngle = value;
+    //    }
+    //}
 
 
 
@@ -83,13 +83,16 @@ public class EnemyAIStateController : MonoBehaviour
 
         // script to handle player detection (v2)
         sensor = GetComponent<AISensor>();
-
+        if (sensor == null)
+        {
+            Debug.Log("No AISensor component!");
+        }
         // add a couple layers to our detection for enemy FoV (so it can't see through things)
         detectionLayer |= (1 << 0);
 
-        DetectionRadius = 10f; // how far can enemy see
-        MinDetectionAngle = -50;
-        MaxDetectionAngle = 50;
+        DetectionRadius = sensor.distance; // how far can enemy see
+        //MinDetectionAngle = -50;
+        //MaxDetectionAngle = 50;
 
 
         health = GetComponent<EnemyHealthScript>();

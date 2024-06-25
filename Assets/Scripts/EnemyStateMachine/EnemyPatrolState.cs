@@ -24,7 +24,9 @@ public class EnemyPatrolState : EnemyBaseState
         // init varaibles used only in this state
         CurrWaypoint = -1; //  init with dummy value
         agent.isStopped = false;
-        agent.speed = 2; // default move speed
+        agent.speed = 90; // default move speed
+        agent.acceleration = 150;
+        agent.stoppingDistance = 20;
 
         //Debug.Log("Length of array: " + enemy.waypoints.Length);
         setNextWaypoint(enemy, anim, agent); //  call waypoint iterator
@@ -42,15 +44,6 @@ public class EnemyPatrolState : EnemyBaseState
         // if yes, call next waypoint
         // ensure there is no pending path for it to alteady take
         // otherwise it will keep rerouting away from the nearest point
-
-        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-        {
-            setNextWaypoint(enemy, anim, agent); //  call waypoint iterator
-        }
-            //Debug.Log((agent.velocity.magnitude / agent.speed) + " is curent velocityZ.");
-            // set agent to move using the Mecanim animations
-        anim.SetFloat("VelocityZ", agent.velocity.magnitude / agent.speed);
-
         // verify the player isn't in detection zone
         // if it is, move to stalking state
 
@@ -61,6 +54,16 @@ public class EnemyPatrolState : EnemyBaseState
             enemy.ChangeState(enemy.enemyStalk);
 
         }
+
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        {
+            setNextWaypoint(enemy, anim, agent); //  call waypoint iterator
+        }
+            //Debug.Log((agent.velocity.magnitude / agent.speed) + " is curent velocityZ.");
+            // set agent to move using the Mecanim animations
+        anim.SetFloat("VelocityZ", agent.velocity.magnitude / agent.speed);
+
+        
     }
 
     private void setNextWaypoint(EnemyAIStateController enemy, Animator anim, UnityEngine.AI.NavMeshAgent agent)

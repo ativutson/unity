@@ -29,7 +29,7 @@ public class EnemyStalkState : EnemyBaseState
 
         // set buffer for success threshold
         // note that the agent also has a stopping disance set in its Navmesh settings
-        captureDistance = 1;
+        captureDistance = 50;
 
         // find its first destination
         setNextWaypoint(enemy, agent);
@@ -92,6 +92,7 @@ public class EnemyStalkState : EnemyBaseState
             bool isPlayer = enemy.handleDetection();
             if (!isPlayer)
             {
+                Debug.Log("Back to patrol. Target is at: "+ agent.remainingDistance);
                 if (targetMarker != null)
                 {
                     Object.Destroy(targetMarker);
@@ -129,9 +130,13 @@ public class EnemyStalkState : EnemyBaseState
         // set a new waypoint for where the enemy should move next
         // uses target prediction func
 
+        
         targetVelocity = enemy.target.GetComponent<VelocityReporter>().velocity;
-
+        if (targetVelocity == null) {
+            Debug.Log("No Velocity Reporter on target...");
+        }
         // get and set new destination
+        Debug.Log("Predicting...");
         predictTargetPosition(enemy, agent);
 
         agent.SetDestination(newTargetDestination);

@@ -74,6 +74,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8155854862692154702, guid: c834424343db04cc59cadc06728fb332,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155854862692154702, guid: c834424343db04cc59cadc06728fb332,
+        type: 3}
       propertyPath: waypoints.Array.data[0]
       value: 
       objectReference: {fileID: 0}
@@ -86,6 +91,11 @@ PrefabInstance:
         type: 3}
       propertyPath: waypoints.Array.data[2]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155854862692154703, guid: c834424343db04cc59cadc06728fb332,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8155854863630529173, guid: c834424343db04cc59cadc06728fb332,
         type: 3}

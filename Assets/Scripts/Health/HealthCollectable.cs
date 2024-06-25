@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class HealthCollectable : MonoBehaviour
 {
+    public AudioClip clip;
+
     void OnTriggerEnter(Collider c) {
-        if(c.attachedRigidbody != null){
-            HealthCollector hc = c.attachedRigidbody.gameObject.GetComponent<HealthCollector>();
+        if(c.gameObject != null){
+            HealthCollector hc = c.gameObject.GetComponent<HealthCollector>();
             if(hc != null){
-                //EventManager.TriggerEvent<BombBounceEvent, Vector3>(c.transform.position);
-                Destroy(this.gameObject);
                 hc.ReceiveHealth();
+                AudioSource.PlayClipAtPoint(clip, transform.position);
+                Destroy(this.gameObject);
             }
         }
     }

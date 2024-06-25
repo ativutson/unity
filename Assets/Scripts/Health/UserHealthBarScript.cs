@@ -28,7 +28,7 @@ public class UserHealthBarScript : MonoBehaviour
     }
 
     // Note a heal is negative damage taken
-    void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         currentHealth -= damageTaken;
         currentHealth = Math.Clamp(currentHealth, 0, maxHealth);

@@ -16,7 +16,11 @@ public class AISensor : MonoBehaviour
     // scanning behaviour
 
     public int scanFrequency = 30; // how many times to scan
-    public LayerMask layermasks; // what layers to scan 
+    public LayerMask layermasks; // what layers to scan
+    public LayerMask excludeLayers; // what layers to leave out 
+
+    public List<GameObject> Objects = new List<GameObject>();
+
 
     // store first 50 collisions
     Collider[] colliders = new Collider[50];
@@ -41,14 +45,70 @@ public class AISensor : MonoBehaviour
 
     private void Scan()
     {
-        count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layermasks,QueryTriggerInteraction.Collide);
+        count = Physics.OverlapSphereNonAlloc(transform.position,
+            distance, colliders, layermasks,QueryTriggerInteraction.Collide);
+        Objects.Clear();
+        for(int i = 0; i < count; ++i)
+        {
+            // check if within vision cone
+            GameObject obj = colliders[i].gameObject;
+            if (IsInSight(obj))
+            {
+                Objects.Add(obj);
+            }
+
+        }
+    }
+
+    public bool IsInSight(GameObject obj) {
+        // check if items in buffer are actually within the vision cone
+
+
+        // first check height of object
+
+        Vector3 agentPosition = transform.position;
+        Vector3 targetPosition = obj.transform.position;
+
+        Vector3 direction = targetPosition - agentPosition;
+
+        if (direction.y < 0 || direction.y > height)
+        {
+            return false;
+        }
+
+
+
+        // check if it is in the slice of vision cone (angle)
+        direction.y = 0; // zero this out so we don't have to worry about differences in height
+        float angleFromTarget = Vector3.Angle(direction, transform.forward);
+
+        // if more than our designed angles = not in vision cone
+        if(angleFromTarget >= angle)
+        {
+            return false;
+        }
+
+        // exclude trees
+
+        // raycast from the middle of the y height of the transform
+        agentPosition.y += agentPosition.y / 2;
+        targetPosition.y = agentPosition.y;
+
+        // if it hits anything in between the two points, that means the monster can't see the player
+        // ideally we would also check if the target was taller than whatever was hit (e.g. if PC is standing behind a tiny shrub)
+        // that is a problem for future me
+        if (Physics.Linecast(agentPosition,targetPosition, excludeLayers)) 
+        {
+            return false;
+        }
+
+        //Debug.Log(obj + " is in sight!");
+        return true;
+
     }
 
     Mesh CreateWedgeMesh()
     {
-        // source:
-        // https://www.youtube.com/watch?v=znZXmmyBF-o&t=565s&ab_channel=TheKiwiCoder
-
         Mesh mesh = new Mesh();
 
         int numTriangles = 8;
@@ -138,16 +198,19 @@ public class AISensor : MonoBehaviour
     {
         if (mesh)
         {
+            // draw vision cone where the enemy is facing
             Gizmos.color = meshColour;
-            // draw where the enemy is facing
+            meshColour.a = 0.25f;
             Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
         }
 
-        Gizmos.DrawWireSphere(transform.position, distance);
+        //Gizmos.DrawWireSphere(transform.position, distance);
 
-        for(int i = 0; i < count; ++i)
+        Gizmos.color = Color.green;
+        foreach (var obj in Objects) 
         {
-            Gizmos.DrawSphere(colliders[i].transform.position,0.2f);
+            // draw sphere around objects that are in vision cone only
+            Gizmos.DrawSphere(obj.transform.position, 0.5f);
         }
     }
 }

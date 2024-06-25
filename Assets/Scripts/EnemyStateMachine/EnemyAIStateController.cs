@@ -22,6 +22,7 @@ public class EnemyAIStateController : MonoBehaviour
     public EnemyStalkState enemyStalk = new EnemyStalkState();
     public EnemyAttackState enemyAttack = new EnemyAttackState();
     public EnemyDeathState enemyDeath = new EnemyDeathState();
+    
 
     // set current state
     EnemyBaseState currentState;
@@ -29,13 +30,15 @@ public class EnemyAIStateController : MonoBehaviour
     // for detection (enemy FoV)
 
     // determine what layer the enemies look for (player)
-    public LayerMask detectionLayer;
-    public LayerMask playerLayer;
+    public LayerMask detectionLayer; // may be obselete
+    public LayerMask playerLayer; // may be obselete
+    public AISensor sensor; // new method
 
     // set the enemy's view radius
-    private float detectionRadius;
-    private float minDetectionAngle;
-    private float maxDetectionAngle;
+    private float detectionRadius; // may be obselete
+    private float minDetectionAngle; // may be obselete
+    private float maxDetectionAngle; // may be obselete
+
 
     // death state detection
     private EnemyHealthScript health; // holds enemy's health script
@@ -78,12 +81,17 @@ public class EnemyAIStateController : MonoBehaviour
         currentState = enemyPatrol; //  set first state
         currentState.EnterState(this, anim, agent);
 
+        // script to handle player detection (v2)
+        sensor = GetComponent<AISensor>();
+
         // add a couple layers to our detection for enemy FoV (so it can't see through things)
         detectionLayer |= (1 << 0);
 
         DetectionRadius = 10f; // how far can enemy see
         MinDetectionAngle = -50;
         MaxDetectionAngle = 50;
+
+
         health = GetComponent<EnemyHealthScript>();
         if(health == null)
         {
@@ -114,49 +122,19 @@ public class EnemyAIStateController : MonoBehaviour
     // handle FoV detection by enemy
     // may be called across various states so we're putting it in here
 
-    public bool handleDetection(Animator anim)
-    {
-        // handle the Field of View of the enemy
-        // if player is within their viewing angle, switch states
+    //AISensor
 
-        // set up collision detection
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, detectionRadius, detectionLayer);
+    public bool handleDetection() {
 
-        for (int i = 0; i < colliders.Length; i++)
+        // if player game object on player layer found
+        if(sensor.Objects.Count>0)
         {
-            //Debug.Log(colliders[i].name + " was hit!");
-
-            // if player layer then check if it is in FoV
-            if (colliders[i].gameObject.layer == 10)
-            {
-                Debug.Log("Player found!");
-
-                // do a raycast to see if the player is behind anything
-                // get direction vector toward player
-                Vector3 playerDirection = transform.position - colliders[i].gameObject.transform.position;
-                bool isVisible = Physics.Raycast(transform.position, playerDirection, detectionRadius);
-
-                if (isVisible)
-                {
-
-                    // vector for the gap between enemy and player
-                    Vector3 targetDetection = colliders[0].transform.position - transform.position;
-                    // angle between where enemy is facing and where the target is
-                    float viewAngle = Vector3.Angle(transform.forward, targetDetection);
-                    // is it in FoV?
-                    if (viewAngle >= minDetectionAngle && viewAngle <= maxDetectionAngle)
-                    {
-
-                        Debug.Log("Player is visible!");
-                        return true;
-                    }
-                }
-
-            }
+            return true;
         }
-
-        return false;
-
+        else
+        {
+            return false;
+        }
     }
 
     public void isBloodied(Animator anim)
@@ -172,6 +150,7 @@ public class EnemyAIStateController : MonoBehaviour
         // enter death state
         if (health.CurrentHealth == 0f) {
 
+            // putting this here so that we can reuse ragdoll code for Player
             agent.speed = 0;
             agent.isStopped = true;
             agent.acceleration = 0;
@@ -179,4 +158,51 @@ public class EnemyAIStateController : MonoBehaviour
             ChangeState(enemyDeath);
         }
     }
+
+
+    //public bool handleDetection(Animator anim)
+    //{
+    //    // handle the Field of View of the enemy
+    //    // if player is within their viewing angle, switch states
+
+    //    // set up collision detection
+    //    Collider[] colliders = Physics.OverlapSphere(this.transform.position, detectionRadius, detectionLayer);
+
+    //    for (int i = 0; i < colliders.Length; i++)
+    //    {
+    //        //Debug.Log(colliders[i].name + " was hit!");
+
+    //        // if player layer then check if it is in FoV
+    //        if (colliders[i].gameObject.layer == 10)
+    //        {
+    //            Debug.Log("Player found!");
+
+    //            // do a raycast to see if the player is behind anything
+    //            // get direction vector toward player
+    //            Vector3 playerDirection = transform.position - colliders[i].gameObject.transform.position;
+    //            bool isVisible = Physics.Raycast(transform.position, playerDirection, detectionRadius);
+
+    //            if (isVisible)
+    //            {
+
+    //                // vector for the gap between enemy and player
+    //                Vector3 targetDetection = colliders[0].transform.position - transform.position;
+    //                // angle between where enemy is facing and where the target is
+    //                float viewAngle = Vector3.Angle(transform.forward, targetDetection);
+    //                // is it in FoV?
+    //                if (viewAngle >= minDetectionAngle && viewAngle <= maxDetectionAngle)
+    //                {
+
+    //                    Debug.Log("Player is visible!");
+    //                    return true;
+    //                }
+    //            }
+
+    //        }
+    //    }
+
+    //    return false;
+
+    //}
+
 }

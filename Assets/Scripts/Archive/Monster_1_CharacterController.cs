@@ -26,7 +26,7 @@ public class Monster_1_CharacterController : MonoBehaviour
 
     //private float randomMoveCounter = 10.0f; // used to generate random time between movement
 
-    private int groundContactCount = 0;
+    //private int groundContactCount = 0;
     private int velocityZHash;
     private int velocityXHash;
 
